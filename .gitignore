@@ -2,6 +2,7 @@
 local.properties
 .idea
 build
+obj
 
 # remove clutter
 .DS_Store
