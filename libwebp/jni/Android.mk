@@ -74,12 +74,12 @@ LOCAL_STATIC_LIBRARIES := cpufeatures
 
 LOCAL_MODULE := webp
 
-ifeq ($(ENABLE_SHARED),1)
+#ifeq ($(ENABLE_SHARED),1)
   include $(BUILD_SHARED_LIBRARY)
-else
-  include $(BUILD_STATIC_LIBRARY)
-endif
+#else
+#  include $(BUILD_STATIC_LIBRARY)
+#endif
 
-include $(LOCAL_PATH)/examples/Android.mk
+# include $(LOCAL_PATH)/examples/Android.mk
 
 $(call import-module,android/cpufeatures)
