@@ -1,0 +1,9 @@
+.gradle
+local.properties
+.idea
+build
+
+# remove clutter
+.DS_Store
+Thumbs.db
+
