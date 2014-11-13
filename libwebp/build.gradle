@@ -9,7 +9,12 @@ android {
         minSdkVersion 8
         targetSdkVersion 21
         versionCode 1
-        versionName "1.0"
+        versionName "0.4.2"
+
+        testApplicationId 'de.marcreichelt.webp_backport.test'
+        testInstrumentationRunner "android.test.InstrumentationTestRunner"
+        testHandleProfiling true
+        testFunctionalTest true
     }
     buildTypes {
         release {
@@ -21,4 +26,6 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile 'com.android.support:support-annotations:21.0.0'
+    androidTestCompile 'org.apache.commons:commons-io:1.3.2'
 }
