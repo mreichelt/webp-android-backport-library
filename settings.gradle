@@ -1,1 +1,1 @@
-include ':testapp', ':libwebp'
+include ':testapp', ':webp_backport'
