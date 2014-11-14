@@ -1,21 +1,42 @@
 package de.marcreichelt.webp_backport.testapp;
 
-import android.support.v7.app.ActionBarActivity;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-import de.marcreichelt.webp_backport.R;
+import org.apache.commons.io.IOUtils;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+import de.marcreichelt.webp_backport.WebPBackport;
 
 
 public class MainActivity extends ActionBarActivity {
+
+    TextView status;
+    ImageView image;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        status = (TextView) findViewById(R.id.status);
+        image = (ImageView) findViewById(R.id.image);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        new LoadWebPTask().execute(R.raw.test_lights_1280x853);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -38,4 +59,34 @@ public class MainActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    class LoadWebPTask extends AsyncTask<Integer, String, Bitmap> {
+
+        @Override
+        protected Bitmap doInBackground(Integer... params) {
+            try {
+                publishProgress(getString(R.string.loading_image));
+                long start = SystemClock.elapsedRealtime();
+                InputStream in = getResources().openRawResource(params[0]);
+                byte[] encoded = IOUtils.toByteArray(in);
+                long time = SystemClock.elapsedRealtime() - start;
+                publishProgress(getString(R.string.status, time, WebPBackport.isLibraryUsed()));
+                return WebPBackport.decode(encoded);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            image.setImageBitmap(bitmap);
+        }
+
+        @Override
+        protected void onProgressUpdate(String... values) {
+            status.setText(values[0]);
+        }
+
+    }
+
 }

@@ -22,5 +22,8 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:21.0.0'
+    // for WebPBackportNetworkImageView
+    compile 'com.mcxiaoke.volley:library:1.0.6'
+    compile 'org.apache.commons:commons-io:1.3.2'
     compile project(':libwebp')
 }
