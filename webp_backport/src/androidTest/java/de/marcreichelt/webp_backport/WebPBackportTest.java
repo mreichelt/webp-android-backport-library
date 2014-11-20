@@ -1,6 +1,7 @@
 package de.marcreichelt.webp_backport;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.support.annotation.RawRes;
 import android.test.AndroidTestCase;
 
@@ -11,6 +12,10 @@ import java.io.InputStream;
 import de.marcreichelt.webp_backport.test.R;
 
 public class WebPBackportTest extends AndroidTestCase {
+
+    /*
+     * Image test_lights_1280x853 is public domain: http://www.pdpics.com/photo/7425-road-traffic-lights-cars/
+     */
 
     static {
         WebPBackport.loadLibrary();
@@ -23,12 +28,10 @@ public class WebPBackportTest extends AndroidTestCase {
     }
 
     public void testLoadEmptyFileReturnsNull() throws Exception {
-        assertTrue(WebPBackport.isLibraryUsed());
         assertNull(WebPBackport.decodeViaLibrary(new byte[0]));
     }
 
     public void testLoadTrashReturnsNull() throws Exception {
-        assertTrue(WebPBackport.isLibraryUsed());
         assertNull(WebPBackport.decodeViaLibrary(new byte[]{1, 2, 3, 4, 5}));
     }
 
@@ -40,15 +43,34 @@ public class WebPBackportTest extends AndroidTestCase {
         decodeAndAssertNormalImage(77);
     }
 
+    public void testNativeDecodeForComparisonIfPossible() throws Exception {
+        byte[] encoded = loadFromResource(R.raw.test_lights_1280x853);
+        for (int i = 0; i < 77; i++) {
+            Bitmap bitmap = WebPBackport.decodeViaSystem(encoded);
+            assertImage(bitmap, 1280, 853);
+        }
+    }
+
+    public void testTransparencyAndLosslessyCompression() throws Exception {
+        byte[] encoded = loadFromResource(R.raw.test_transparent_lossless);
+        Bitmap bitmap = WebPBackport.decodeViaLibrary(encoded);
+        assertImage(bitmap, 1, 1);
+        int firstPixel = bitmap.getPixel(0, 0);
+        assertEquals(Color.TRANSPARENT, firstPixel);
+    }
+
     void decodeAndAssertNormalImage(int times) throws Exception {
-        // image is public domain from http://www.pdpics.com/photo/7425-road-traffic-lights-cars/
         byte[] encoded = loadFromResource(R.raw.test_lights_1280x853);
         for (int i = 0; i < times; i++) {
-            Bitmap decoded = WebPBackport.decodeViaLibrary(encoded);
-            assertNotNull(decoded);
-            assertEquals(1280, decoded.getWidth());
-            assertEquals(853, decoded.getHeight());
+            Bitmap bitmap = WebPBackport.decodeViaLibrary(encoded);
+            assertImage(bitmap, 1280, 853);
         }
+    }
+
+    void assertImage(Bitmap bitmap, int width, int height) {
+        assertNotNull(bitmap);
+        assertEquals(width, bitmap.getWidth());
+        assertEquals(height, bitmap.getHeight());
     }
 
     // TODO: currently, instead of throwing an OutOfMemoryError, loading the image crashes the whole VM.

@@ -16,11 +16,10 @@ import java.nio.ByteBuffer;
 public class WebPBackport {
 
     private static final String TAG = WebPBackport.class.getSimpleName();
-    private static final boolean IS_WEBP_SUPPORTED_NATIVELY = Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH;
     static boolean librarySuccessfullyLoaded = false;
 
     static {
-        if (!IS_WEBP_SUPPORTED_NATIVELY) {
+        if (!isIsWebpSupportedNatively()) {
             loadLibrary();
         }
     }
@@ -32,6 +31,10 @@ public class WebPBackport {
         } catch (Exception e) {
             Log.w(TAG, "failed to load webp library", e);
         }
+    }
+
+    static boolean isIsWebpSupportedNatively() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2;
     }
 
     /**
@@ -53,7 +56,7 @@ public class WebPBackport {
      * or by the included native library.
      */
     public static boolean isWebPSupported() {
-        return IS_WEBP_SUPPORTED_NATIVELY || librarySuccessfullyLoaded;
+        return isIsWebpSupportedNatively() || librarySuccessfullyLoaded;
     }
 
     /**
@@ -72,6 +75,8 @@ public class WebPBackport {
         }
         int[] pixels = new int[decoded.length / 4];
         ByteBuffer.wrap(decoded).asIntBuffer().get(pixels);
+        //noinspection UnusedAssignment
+        decoded = null;
         return Bitmap.createBitmap(pixels, width[0], height[0], Bitmap.Config.ARGB_8888);
     }
 
