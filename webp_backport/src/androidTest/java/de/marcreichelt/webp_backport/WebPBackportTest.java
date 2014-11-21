@@ -44,10 +44,13 @@ public class WebPBackportTest extends AndroidTestCase {
     }
 
     public void testNativeDecodeForComparisonIfPossible() throws Exception {
-        byte[] encoded = loadFromResource(R.raw.test_lights_1280x853);
-        for (int i = 0; i < 77; i++) {
-            Bitmap bitmap = WebPBackport.decodeViaSystem(encoded);
-            assertImage(bitmap, 1280, 853);
+        // only run test case when the device supports it
+        if (WebPBackport.isIsWebpSupportedNatively()) {
+            byte[] encoded = loadFromResource(R.raw.test_lights_1280x853);
+            for (int i = 0; i < 77; i++) {
+                Bitmap bitmap = WebPBackport.decodeViaSystem(encoded);
+                assertImage(bitmap, 1280, 853);
+            }
         }
     }
 
