@@ -38,17 +38,26 @@ public class WebPBackport {
     }
 
     /**
+     * Check if a given byte array is a WebP image
+     *
+     * @param encoded the byte array to check
+     * @return true if the byte array is recognized as a WebP image
+     */
+    public static boolean isWebP(byte[] encoded) {
+        return FileSignatureChecker.checkForWebP(encoded);
+    }
+
+    /**
      * Decodes a WebP image.
      *
      * @param encoded The encoded WebP data (e.g. from a stream, resource, etc.).
      * @return The decoded image, or {@code null} if it could not be decoded.
      */
     public static Bitmap decode(byte[] encoded) {
-        if (isLibraryUsed()) {
+        if (isLibraryUsed() && isWebP(encoded)) {
             return decodeViaLibrary(encoded);
-        } else {
-            return decodeViaSystem(encoded);
         }
+        return decodeViaSystem(encoded);
     }
 
     /**
