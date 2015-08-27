@@ -38,23 +38,16 @@ public class WebPBackport {
     }
 
     /**
-     * Check if a given byte array is a WebP image
-     *
-     * @param encoded the byte array to check
-     * @return true if the byte array is recognized as a WebP image
-     */
-    public static boolean isWebP(byte[] encoded) {
-        return FileSignatureChecker.checkForWebP(encoded);
-    }
-
-    /**
-     * Decodes a WebP image.
+     * Decodes a WebP image. This is done either by using the Android internal functionality or by using the
+     * WebPBackport library. The WebPBackport library is used only when the current Android system does not support the
+     * decoding by itself and the given encoded image has the necessary WebP file signature in the beginning of its
+     * content.
      *
      * @param encoded The encoded WebP data (e.g. from a stream, resource, etc.).
      * @return The decoded image, or {@code null} if it could not be decoded.
      */
     public static Bitmap decode(byte[] encoded) {
-        if (isLibraryUsed() && isWebP(encoded)) {
+        if (isLibraryUsed() && FileSignatureChecker.checkForWebP(encoded)) {
             return decodeViaLibrary(encoded);
         }
         return decodeViaSystem(encoded);
