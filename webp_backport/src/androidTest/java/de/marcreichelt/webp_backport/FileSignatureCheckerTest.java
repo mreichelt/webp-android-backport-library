@@ -10,6 +10,9 @@ import de.marcreichelt.webp_backport.test.R;
 
 public class FileSignatureCheckerTest extends AndroidTestCase {
 
+    public static final byte[] ARRAY_1234 = {1, 2, 3, 4};
+    public static final byte[] ARRAY_EMPTY = {};
+
     static {
         WebPBackport.loadLibrary();
     }
@@ -21,35 +24,35 @@ public class FileSignatureCheckerTest extends AndroidTestCase {
     }
 
     public void testByteArrayContains() throws Exception {
-        assertTrue(FileSignatureChecker.byteArrayContainsAt(new byte[]{1, 2, 3, 4}, new byte[]{1, 2, 3, 4}, 0));
-        assertTrue(FileSignatureChecker.byteArrayContainsAt(new byte[]{1, 2, 3, 4}, new byte[]{}, 0));
-        assertTrue(FileSignatureChecker.byteArrayContainsAt(new byte[]{1, 2, 3, 4}, new byte[]{2, 3, 4}, 1));
-        assertTrue(FileSignatureChecker.byteArrayContainsAt(new byte[]{}, new byte[]{}, 0));
+        assertTrue(FileSignatureChecker.containsAt(ARRAY_1234, ARRAY_1234, 0));
+        assertTrue(FileSignatureChecker.containsAt(ARRAY_1234, ARRAY_EMPTY, 0));
+        assertTrue(FileSignatureChecker.containsAt(ARRAY_1234, new byte[]{2, 3, 4}, 1));
+        assertTrue(FileSignatureChecker.containsAt(ARRAY_EMPTY, ARRAY_EMPTY, 0));
 
 
-        assertFalse(FileSignatureChecker.byteArrayContainsAt(new byte[]{1, 2, 3, 4}, new byte[]{1, 2, 3, 4}, -1));
-        assertFalse(FileSignatureChecker.byteArrayContainsAt(new byte[]{1, 2, 3, 4}, new byte[]{1, 2, 3, 4}, 999));
-        assertFalse(FileSignatureChecker.byteArrayContainsAt(new byte[]{1, 2, 3, 4}, new byte[]{1, 2, 3, 4}, 4));
-        assertFalse(FileSignatureChecker.byteArrayContainsAt(new byte[]{}, new byte[]{2, 3, 4}, 1));
-        assertFalse(FileSignatureChecker.byteArrayContainsAt(new byte[]{2, 3, 4}, new byte[]{2, 3, 4}, 1));
-        assertFalse(FileSignatureChecker.byteArrayContainsAt(new byte[]{2, 3, 4}, new byte[]{2, 3, 4, 5}, 0));
-        assertFalse(FileSignatureChecker.byteArrayContainsAt(new byte[]{2, 3, 3}, new byte[]{2, 3, 4}, 0));
+        assertFalse(FileSignatureChecker.containsAt(ARRAY_1234, ARRAY_1234, -1));
+        assertFalse(FileSignatureChecker.containsAt(ARRAY_1234, ARRAY_1234, 999));
+        assertFalse(FileSignatureChecker.containsAt(ARRAY_1234, ARRAY_1234, 4));
+        assertFalse(FileSignatureChecker.containsAt(ARRAY_EMPTY, new byte[]{2, 3, 4}, 1));
+        assertFalse(FileSignatureChecker.containsAt(new byte[]{2, 3, 4}, new byte[]{2, 3, 4}, 1));
+        assertFalse(FileSignatureChecker.containsAt(new byte[]{2, 3, 4}, new byte[]{2, 3, 4, 5}, 0));
+        assertFalse(FileSignatureChecker.containsAt(new byte[]{2, 3, 3}, new byte[]{2, 3, 4}, 0));
 
-        assertTrue(FileSignatureChecker.byteArrayContainsAt(new byte[]{1, 2, 3, 4}, new byte[]{4}, 3));
-        assertFalse(FileSignatureChecker.byteArrayContainsAt(new byte[]{1, 2, 3, 4}, new byte[]{4}, 4));
+        assertTrue(FileSignatureChecker.containsAt(ARRAY_1234, new byte[]{4}, 3));
+        assertFalse(FileSignatureChecker.containsAt(ARRAY_1234, new byte[]{4}, 4));
 
     }
 
     public void testByteArrayStartsWith() throws Exception {
-        assertTrue(FileSignatureChecker.byteArrayStartsWith(new byte[]{1, 2, 3, 4}, new byte[]{1, 2, 3, 4}));
-        assertTrue(FileSignatureChecker.byteArrayStartsWith(new byte[]{1, 2, 3, 4}, new byte[]{1}));
-        assertTrue(FileSignatureChecker.byteArrayStartsWith(new byte[]{1, 2, 3, 4}, new byte[]{}));
+        assertTrue(FileSignatureChecker.startsWith(ARRAY_1234, ARRAY_1234));
+        assertTrue(FileSignatureChecker.startsWith(ARRAY_1234, new byte[]{1}));
+        assertTrue(FileSignatureChecker.startsWith(ARRAY_1234, ARRAY_EMPTY));
 
-        assertTrue(FileSignatureChecker.byteArrayStartsWith(new byte[]{}, new byte[]{}));
+        assertTrue(FileSignatureChecker.startsWith(ARRAY_EMPTY, ARRAY_EMPTY));
 
-        assertTrue(FileSignatureChecker.byteArrayStartsWith(new byte[]{1, 2, 3, 4}, new byte[]{1, 2, 3}));
-        assertTrue(FileSignatureChecker.byteArrayStartsWith(new byte[]{1, 2, 3, 4}, new byte[]{1, 2}));
-        assertTrue(FileSignatureChecker.byteArrayStartsWith(new byte[]{1, 2, 3, 4}, new byte[]{1}));
+        assertTrue(FileSignatureChecker.startsWith(ARRAY_1234, new byte[]{1, 2, 3}));
+        assertTrue(FileSignatureChecker.startsWith(ARRAY_1234, new byte[]{1, 2}));
+        assertTrue(FileSignatureChecker.startsWith(ARRAY_1234, new byte[]{1}));
     }
 
     public void testEmptyIsNoWebP() throws Exception {
