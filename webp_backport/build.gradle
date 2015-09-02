@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23"
+    buildToolsVersion "23.0.0"
 
     defaultConfig {
         minSdkVersion 8
@@ -27,4 +27,143 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile 'com.android.support:support-annotations:23.0.0'
     androidTestCompile 'org.apache.commons:commons-io:1.3.2'
+}
+
+//
+// Settings for publishing to jcenter.
+//
+// For details about how to setup your account at bintray.com please refer to section 1 of:
+//
+// http://inthecheesefactory.com/blog/how-to-upload-library-to-jcenter-maven-central-as-dependency/en
+//
+// Afterwards add the following to your local.properties:
+//
+// bintray.apikey=<see https://bintray.com/profile/edit -> API Key>
+// bintray.user=<your bintray username>
+//
+// Change the settings in the following section to be in line with your settings on bintray.
+//
+// Follow the steps in section 5 and 6 of the tutorial mentioned above to publish the artifacts
+// to jcenter.
+//
+// To upload a new version to jcenter run
+// ./gradlew bintrayUpload
+//
+
+ext {
+    bintrayName = 'TODO name of the package at bintray.com, e.g. webp-android-backport-library'
+
+    publishedGroupId = 'de.marcreichelt'
+    pomLibraryName = 'WebPAndroidBackportLibrary'
+
+    libraryDescription = 'TODO Add some nice description here...'
+
+    siteUrl = 'https://github.com/mreichelt/webp-android-backport-library'
+    gitUrl = 'https://github.com/mreichelt/webp-android-backport-library.git'
+
+    libraryVersion = android.defaultConfig.versionName
+
+    developerId = 'mcreichelt'
+    developerName = 'Marc Reichelt'
+    developerEmail = 'mcreichelt@gmail.com'
+
+    // TODO This needs to be changed! Bintray offers a limited number of licenses to be selected during setup of the package.
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
+
+//
+// From https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle
+//
+
+apply plugin: 'com.github.dcendents.android-maven'
+
+group = publishedGroupId
+
+install {
+    repositories.mavenInstaller {
+        // This generates POM.xml with proper parameters
+        pom {
+            project {
+                packaging 'aar'
+                groupId publishedGroupId
+
+                name pomLibraryName
+                description libraryDescription
+                url siteUrl
+
+                licenses {
+                    license {
+                        name licenseName
+                        url licenseUrl
+                    }
+                }
+                developers {
+                    developer {
+                        id developerId
+                        name developerName
+                        email developerEmail
+                    }
+                }
+                scm {
+                    connection gitUrl
+                    developerConnection gitUrl
+                    url siteUrl
+
+                }
+            }
+        }
+    }
+}
+
+//
+// From https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle
+//
+
+apply plugin: 'com.jfrog.bintray'
+
+version = libraryVersion
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+bintray {
+    user = properties.getProperty("bintray.user")
+    key = properties.getProperty("bintray.apikey")
+
+    configurations = ['archives']
+    pkg {
+        repo = 'maven'
+        name = bintrayName
+        desc = libraryDescription
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        licenses = allLicenses
+        publish = true
+        publicDownloadNumbers = true
+        version {
+            desc = libraryDescription
+        }
+    }
 }

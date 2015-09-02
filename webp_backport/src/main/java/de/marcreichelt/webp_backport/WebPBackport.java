@@ -62,6 +62,8 @@ public class WebPBackport {
     /**
      * Returns whether WebP images can be decoded. More exact: if WebP is supported by the platform
      * or by the included native library.
+     *
+     * @return {@code true} if WebP is supported.
      */
     public static boolean isWebPSupported() {
         return isIsWebpSupportedNatively() || librarySuccessfullyLoaded;
@@ -69,6 +71,8 @@ public class WebPBackport {
 
     /**
      * Is the native library used to decode WebP images?
+     *
+     * @return {@code true} if the native library is used.
      */
     public static boolean isLibraryUsed() {
         return librarySuccessfullyLoaded;
