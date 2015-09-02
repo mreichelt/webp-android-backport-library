@@ -1,10 +1,29 @@
+build
 .gradle
 local.properties
-.idea
-build
 obj
 
-# remove clutter
-.DS_Store
-Thumbs.db
+# Intellij IDEA (see https://gist.github.com/iainconnor/8605514)
+.idea/libraries
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/.name
+.idea/compiler.xml
+.idea/copyright/profiles_settings.xml
+.idea/encodings.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/scopes/scope_settings.xml
+.idea/vcs.xml
+.idea/runConfigurations.xml
+.idea/gradle.xml
+*.iml
 
+# other stuff
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
