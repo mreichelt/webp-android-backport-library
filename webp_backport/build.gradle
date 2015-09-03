@@ -51,23 +51,23 @@ dependencies {
 //
 
 ext {
-    bintrayName = 'TODO name of the package at bintray.com, e.g. webp-android-backport-library'
+    bintrayRepo = 'maven'
+    bintrayName = 'webp-android-backport'
 
     publishedGroupId = 'de.marcreichelt'
-    pomLibraryName = 'WebPAndroidBackportLibrary'
+    pomLibraryName = bintrayName
 
-    libraryDescription = 'TODO Add some nice description here...'
+    libraryDescription = 'A library for easily using WebP on older Android versions via a native library.'
 
     siteUrl = 'https://github.com/mreichelt/webp-android-backport-library'
     gitUrl = 'https://github.com/mreichelt/webp-android-backport-library.git'
 
     libraryVersion = android.defaultConfig.versionName
 
-    developerId = 'mcreichelt'
+    developerId = 'mreichelt'
     developerName = 'Marc Reichelt'
     developerEmail = 'mcreichelt@gmail.com'
 
-    // TODO This needs to be changed! Bintray offers a limited number of licenses to be selected during setup of the package.
     licenseName = 'The Apache Software License, Version 2.0'
     licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
     allLicenses = ["Apache-2.0"]
