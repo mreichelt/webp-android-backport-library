@@ -8,7 +8,7 @@ android {
         minSdkVersion 8
         targetSdkVersion 23
         versionCode 1
-        versionName "0.4.2"
+        versionName "0.4.3"
 
         testApplicationId 'de.marcreichelt.webp_backport.test'
         testInstrumentationRunner "android.test.InstrumentationTestRunner"
@@ -52,7 +52,7 @@ dependencies {
 
 ext {
     bintrayRepo = 'maven'
-    bintrayName = 'webp-android-backport'
+    bintrayName = 'webp-backport'
 
     publishedGroupId = 'de.marcreichelt'
     pomLibraryName = bintrayName
