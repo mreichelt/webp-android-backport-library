@@ -76,8 +76,6 @@ public class WebPBackportTest extends AndroidTestCase {
         assertEquals(height, bitmap.getHeight());
     }
 
-    // TODO: currently, instead of throwing an OutOfMemoryError, loading the image crashes the whole VM.
-    /*
     public void testMaximumPossibleWebPFileThrowsOutOfMemoryError() throws Exception {
         byte[] encoded = loadFromResource(R.raw.test_maximum_16383px);
         try {
@@ -87,7 +85,6 @@ public class WebPBackportTest extends AndroidTestCase {
             // we actually expect an out of memory error
         }
     }
-    */
 
     byte[] loadFromResource(@RawRes int resource) throws Exception {
         InputStream in = getContext().getResources().openRawResource(resource);
