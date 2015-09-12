@@ -93,7 +93,7 @@ public class WebPBackport {
      * @return The size of the WebP image, of {@code null} if something went wrong.
      */
     @Nullable
-    public Rect getSize(byte[] encoded) {
+    public static Rect getSize(byte[] encoded) {
         if (encoded == null) {
             return null;
         }

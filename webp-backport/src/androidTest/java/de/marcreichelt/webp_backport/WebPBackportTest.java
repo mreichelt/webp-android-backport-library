@@ -2,6 +2,7 @@ package de.marcreichelt.webp_backport;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.support.annotation.RawRes;
 import android.test.AndroidTestCase;
 
@@ -60,6 +61,20 @@ public class WebPBackportTest extends AndroidTestCase {
         assertImage(bitmap, 1, 1);
         int firstPixel = bitmap.getPixel(0, 0);
         assertEquals(Color.TRANSPARENT, firstPixel);
+    }
+
+    public void testGetSize() throws Exception {
+        byte[] encoded = loadFromResource(R.raw.test_lights_1280x853);
+        Rect rect = WebPBackport.getSize(encoded);
+        assertNotNull(rect);
+        assertEquals(1280, rect.width());
+        assertEquals(853, rect.height());
+    }
+
+    public void testGetSizeOnInvalidData() throws Exception {
+        byte[] encoded = loadFromResource(R.raw.test_empty);
+        Rect rect = WebPBackport.getSize(encoded);
+        assertNull(rect);
     }
 
     void decodeAndAssertNormalImage(int times) throws Exception {
