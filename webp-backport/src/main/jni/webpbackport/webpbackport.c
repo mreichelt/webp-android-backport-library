@@ -56,7 +56,6 @@ jboolean decodeRGBAIntoInternal(JNIEnv * env, AndroidBitmapInfo info, jbyteArray
     encoded_length = (*env)->GetArrayLength(env, encoded);
     ret = WebPGetInfo(encoded_array, encoded_length, &width, &height);
 
-    LOGI("info returned: %d, width=%d, height=%d", ret, width, height);
     if (!ret) {
         LOGE("unable to get webp info");
         return JNI_FALSE;
@@ -66,7 +65,6 @@ jboolean decodeRGBAIntoInternal(JNIEnv * env, AndroidBitmapInfo info, jbyteArray
         return JNI_FALSE;
     }
 
-    LOGI("locking pixels...");
     if ((ret = AndroidBitmap_lockPixels(env, bitmap, &pixels)) < 0) {
         LOGE("AndroidBitmap_lockPixels() failed ! error=%d", ret);
         return JNI_FALSE;
@@ -74,7 +72,6 @@ jboolean decodeRGBAIntoInternal(JNIEnv * env, AndroidBitmapInfo info, jbyteArray
 
     result = WebPDecodeRGBAInto(encoded_array, encoded_length, (uint8_t*) pixels, output_buffer_size, info.stride);
 
-    LOGI("unlocking pixels...");
     AndroidBitmap_unlockPixels(env, bitmap);
 
     (*env)->ReleaseByteArrayElements(env, encoded, encoded_array, JNI_ABORT);
@@ -93,13 +90,10 @@ JNIEXPORT jboolean JNICALL Java_de_marcreichelt_webp_1backport_WebPBackport_deco
     AndroidBitmapInfo info;
     int ret;
 
-    LOGI("getting bitmap info...");
     if ((ret = AndroidBitmap_getInfo(env, bitmap, &info)) < 0) {
         LOGE("AndroidBitmap_getInfo() failed ! error=%d", ret);
         return JNI_FALSE;
     }
-
-    LOGI("bitmap size: %dx%d", info.width, info.height);
 
     if (info.format != ANDROID_BITMAP_FORMAT_RGBA_8888) {
         LOGE("Bitmap format is not RGBA_8888 !");
