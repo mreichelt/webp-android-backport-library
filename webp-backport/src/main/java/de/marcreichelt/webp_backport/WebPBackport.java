@@ -3,7 +3,9 @@ package de.marcreichelt.webp_backport;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 import android.os.Build;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 /**
@@ -12,9 +14,8 @@ import android.util.Log;
  */
 public class WebPBackport {
 
-    // TODO: remove again
-    private static final boolean DEBUG = Boolean.parseBoolean("true");
     private static final String TAG = WebPBackport.class.getSimpleName();
+    private static final int BYTES_PER_PIXEL_ARGB_8888 = 4;
     static boolean librarySuccessfullyLoaded = false;
 
     static {
@@ -37,7 +38,7 @@ public class WebPBackport {
     }
 
     static boolean isIsWebpSupportedNatively() {
-        return !DEBUG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2;
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2;
     }
 
     /**
@@ -85,29 +86,45 @@ public class WebPBackport {
         return decodeViaLibrary(encoded, null);
     }
 
-    static Bitmap decodeViaLibrary(byte[] encoded, Bitmap reusableBitmap) {
-        /*
-        Bitmap buffer = useOrCreateBuffer(encoded, reusableBitmap);
-        if (buffer == null) {
+    /**
+     * Get size of an encoded WebP image.
+     *
+     * @param encoded The WebP data.
+     * @return The size of the WebP image, of {@code null} if something went wrong.
+     */
+    @Nullable
+    public Rect getSize(byte[] encoded) {
+        if (encoded == null) {
             return null;
         }
-        */
 
         int[] width = {0};
         int[] height = {0};
         boolean result = getInfo(encoded, width, height);
-        Log.d(TAG, String.format("got info: %s, width=%s, height=%s", result, width[0], height[0]));
-
-        if (result) {
-            Bitmap bitmap = Bitmap.createBitmap(width[0], height[0], Config.ARGB_8888);
-            decodeRGBAInto(bitmap, encoded);
-            return bitmap;
-        } else {
-            return null;
-        }
+        return result ? new Rect(0, 0, width[0], height[0]) : null;
     }
 
-    /*
+    @Nullable
+    static Bitmap decodeViaLibrary(byte[] encoded, Bitmap reusableBitmap) {
+        Bitmap buffer = useOrCreateBuffer(encoded, reusableBitmap);
+        if (buffer == null) {
+            return null;
+        }
+
+        int[] width = {0};
+        int[] height = {0};
+        boolean result = getInfo(encoded, width, height);
+        if (!result) {
+            Log.w(TAG, "unable to determine size of WebP image");
+            return null;
+        }
+
+        Bitmap bitmap = Bitmap.createBitmap(width[0], height[0], Config.ARGB_8888);
+        decodeRGBAInto(bitmap, encoded);
+        return bitmap;
+    }
+
+    @Nullable
     private static Bitmap useOrCreateBuffer(byte[] encoded, Bitmap buffer) {
         if (encoded == null) {
             return null;
@@ -115,7 +132,7 @@ public class WebPBackport {
 
         int[] width = new int[]{0};
         int[] height = new int[]{0};
-        libwebp.WebPGetInfo(encoded, encoded.length, width, height);
+        getInfo(encoded, width, height);
 
         if (width[0] == 0 || height[0] == 0) {
             return null;
@@ -137,8 +154,8 @@ public class WebPBackport {
 
         return buffer;
     }
-    */
 
+    @Nullable
     static Bitmap decodeViaSystem(byte[] encoded) {
         return BitmapFactory.decodeByteArray(encoded, 0, encoded.length);
     }
