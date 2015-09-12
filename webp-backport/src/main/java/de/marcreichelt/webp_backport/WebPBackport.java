@@ -132,9 +132,9 @@ public class WebPBackport {
 
         int[] width = new int[]{0};
         int[] height = new int[]{0};
-        getInfo(encoded, width, height);
+        boolean result = getInfo(encoded, width, height);
 
-        if (width[0] == 0 || height[0] == 0) {
+        if (!result || width[0] <= 0 || height[0] <= 0) {
             return null;
         }
 
