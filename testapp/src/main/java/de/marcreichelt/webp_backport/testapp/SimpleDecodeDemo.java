@@ -18,7 +18,7 @@ import java.io.InputStream;
 import de.marcreichelt.webp_backport.WebPBackport;
 
 
-public class MainActivity extends AppCompatActivity {
+public class SimpleDecodeDemo extends AppCompatActivity {
 
     TextView status;
     ImageView image;
@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.simple_decode_demo);
 
         status = (TextView) findViewById(R.id.status);
         image = (ImageView) findViewById(R.id.image);
@@ -36,28 +36,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         new LoadWebPTask().execute(R.raw.test_lights_1280x853);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     class LoadWebPTask extends AsyncTask<Integer, String, Bitmap> {
