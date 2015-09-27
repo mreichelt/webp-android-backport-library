@@ -45,9 +45,10 @@ public class WebPBackport {
      * Decodes a WebP image. This is done either by using the Android internal functionality or by using the
      * WebPBackport library. The WebPBackport library is used only when the current Android system does not support the
      * decoding by itself.
-     * <p/>
+     * <p>
      * If the given encoded image does not have the necessary WebP file signature in the beginning of its
      * content, then the encoded image will not be decoded.
+     * </p>
      *
      * @param encoded The encoded WebP data (e.g. from a stream, resource, etc.).
      * @return The decoded WebP image, or {@code null} if it could not be decoded successfully or if {@code encoded}

@@ -29,9 +29,14 @@ android {
     }
 }
 
+configurations {
+    javadocDeps
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:support-annotations:23.0.1'
+    javadocDeps 'com.android.support:support-annotations:23.0.1'
     androidTestCompile 'org.apache.commons:commons-io:1.3.2'
 }
 
@@ -149,6 +154,7 @@ task sourcesJar(type: Jar) {
 task javadoc(type: Javadoc) {
     source = android.sourceSets.main.java.srcDirs
     classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    classpath += configurations.javadocDeps
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
