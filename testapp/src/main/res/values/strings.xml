@@ -5,5 +5,6 @@
     <string name="loading_image">WebP test image:</string>
     <string name="action_settings">Settings</string>
     <string name="status" formatted="false">WebP image loaded in %s ms\nLibrary used: %s</string>
+    <string name="alt_image">Image</string>
 
 </resources>

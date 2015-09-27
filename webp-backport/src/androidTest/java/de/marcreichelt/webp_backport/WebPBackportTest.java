@@ -2,6 +2,7 @@ package de.marcreichelt.webp_backport;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.support.annotation.RawRes;
 import android.test.AndroidTestCase;
 
@@ -62,6 +63,20 @@ public class WebPBackportTest extends AndroidTestCase {
         assertEquals(Color.TRANSPARENT, firstPixel);
     }
 
+    public void testGetSize() throws Exception {
+        byte[] encoded = loadFromResource(R.raw.test_lights_1280x853);
+        Rect rect = WebPBackport.getSize(encoded);
+        assertNotNull(rect);
+        assertEquals(1280, rect.width());
+        assertEquals(853, rect.height());
+    }
+
+    public void testGetSizeOnInvalidData() throws Exception {
+        byte[] encoded = loadFromResource(R.raw.test_empty);
+        Rect rect = WebPBackport.getSize(encoded);
+        assertNull(rect);
+    }
+
     void decodeAndAssertNormalImage(int times) throws Exception {
         byte[] encoded = loadFromResource(R.raw.test_lights_1280x853);
         for (int i = 0; i < times; i++) {
@@ -76,8 +91,6 @@ public class WebPBackportTest extends AndroidTestCase {
         assertEquals(height, bitmap.getHeight());
     }
 
-    // TODO: currently, instead of throwing an OutOfMemoryError, loading the image crashes the whole VM.
-    /*
     public void testMaximumPossibleWebPFileThrowsOutOfMemoryError() throws Exception {
         byte[] encoded = loadFromResource(R.raw.test_maximum_16383px);
         try {
@@ -87,7 +100,6 @@ public class WebPBackportTest extends AndroidTestCase {
             // we actually expect an out of memory error
         }
     }
-    */
 
     byte[] loadFromResource(@RawRes int resource) throws Exception {
         InputStream in = getContext().getResources().openRawResource(resource);

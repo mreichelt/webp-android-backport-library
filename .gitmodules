@@ -1,0 +1,3 @@
+[submodule "webp-backport/src/main/jni/webp"]
+	path = webp-backport/src/main/jni/webp
+	url = https://chromium.googlesource.com/webm/libwebp

@@ -1,0 +1,21 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
+    tools:context=".Main">
+
+    <Button
+        android:id="@+id/simple_decode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Simple Decode" />
+
+    <Button
+        android:id="@+id/glide"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Glide" />
+
+</LinearLayout>
