@@ -1,7 +1,7 @@
 webp-android-backport-library
 =============================
 
-Backport of WebP library for Android devices &lt; 4.0
+Backport of WebP library for Android devices &lt; 4.3
 
 A small project I have been working on in private - making the [official WebP library](https://chromium.googlesource.com/webm/libwebp/) easily accessible for Android developers that have to support older devices.
 Basic usage:
