@@ -19,7 +19,7 @@ public class WebPBackport {
     static boolean librarySuccessfullyLoaded = false;
 
     static {
-        if (!isIsWebpSupportedNatively()) {
+        if (!isWebpSupportedNatively()) {
             loadLibrary();
         }
     }
@@ -41,7 +41,7 @@ public class WebPBackport {
         }
     }
 
-    static boolean isIsWebpSupportedNatively() {
+    static boolean isWebpSupportedNatively() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2;
     }
 
@@ -68,7 +68,7 @@ public class WebPBackport {
      * @return {@code true} if WebP is supported.
      */
     public static boolean isWebPSupported() {
-        return isIsWebpSupportedNatively() || librarySuccessfullyLoaded;
+        return isWebpSupportedNatively() || librarySuccessfullyLoaded;
     }
 
     /**

@@ -42,7 +42,7 @@ public class WebPBackportTest extends AndroidTestCase {
 
     public void testNativeDecodeForComparisonIfPossible() throws Exception {
         // only run test case when the device supports it
-        if (WebPBackport.isIsWebpSupportedNatively()) {
+        if (WebPBackport.isWebpSupportedNatively()) {
             byte[] encoded = loadFromResource(R.raw.test_lights_1280x853);
             for (int i = 0; i < 77; i++) {
                 Bitmap bitmap = WebPBackport.decodeViaSystem(encoded);
@@ -69,6 +69,10 @@ public class WebPBackportTest extends AndroidTestCase {
 
     public void testComplexRoundImage() throws Exception {
         assertEqualBitmaps(R.raw.test_round_png, R.raw.test_round_webp);
+    }
+
+    public void testComplexSmallRoundImage() throws Exception {
+        assertEqualBitmaps(R.raw.test_round_small_png, R.raw.test_round_small_webp);
     }
 
     public void testGetSize() throws Exception {
@@ -121,10 +125,12 @@ public class WebPBackportTest extends AndroidTestCase {
         assertEquals(expected.getWidth(), actual.getWidth());
         for (int y = 0; y < expected.getHeight(); y++) {
             for (int x = 0; x < expected.getWidth(); x++) {
-                int expectedPixel = expected.getPixel(x, y);
-                int actualPixel = actual.getPixel(x, y);
+                int expectedColor = expected.getPixel(x, y);
+                int actualColor = actual.getPixel(x, y);
+                String expectedHex = "#" + Integer.toHexString(expectedColor);
+                String actualHex = "#" + Integer.toHexString(actualColor);
                 String message = String.format("Pixels at (%s, %s) have different colors.", x, y);
-                assertEquals(message, expectedPixel, actualPixel);
+                assertEquals(message, expectedHex, actualHex);
             }
         }
     }
