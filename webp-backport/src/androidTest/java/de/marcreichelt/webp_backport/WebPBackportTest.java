@@ -1,7 +1,7 @@
 package de.marcreichelt.webp_backport;
 
 import android.graphics.Bitmap;
-import android.graphics.Color;
+import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.support.annotation.RawRes;
 import android.test.AndroidTestCase;
@@ -19,7 +19,7 @@ public class WebPBackportTest extends AndroidTestCase {
      */
 
     static {
-        WebPBackport.loadLibrary();
+        WebPBackport.forceLoadLibrary();
     }
 
     @Override
@@ -40,10 +40,6 @@ public class WebPBackportTest extends AndroidTestCase {
         decodeAndAssertNormalImage(1);
     }
 
-    public void testGarbageCollectionCanFreeData() throws Exception {
-        decodeAndAssertNormalImage(77);
-    }
-
     public void testNativeDecodeForComparisonIfPossible() throws Exception {
         // only run test case when the device supports it
         if (WebPBackport.isIsWebpSupportedNatively()) {
@@ -55,12 +51,24 @@ public class WebPBackportTest extends AndroidTestCase {
         }
     }
 
-    public void testTransparencyAndLosslessyCompression() throws Exception {
-        byte[] encoded = loadFromResource(R.raw.test_transparent_lossless);
-        Bitmap bitmap = WebPBackport.decodeViaLibrary(encoded);
-        assertImage(bitmap, 1, 1);
-        int firstPixel = bitmap.getPixel(0, 0);
-        assertEquals(Color.TRANSPARENT, firstPixel);
+    public void testTransparentPixel() throws Exception {
+        assertEqualBitmaps(R.raw.test_pixel_transparent_png, R.raw.test_pixel_transparent_webp);
+    }
+
+    public void testRedPixel() throws Exception {
+        assertEqualBitmaps(R.raw.test_pixel_red_png, R.raw.test_pixel_red_webp);
+    }
+
+    public void testRedPixelWithTransparentBorder() throws Exception {
+        assertEqualBitmaps(R.raw.test_red_pixel_with_transparent_border_png, R.raw.test_red_pixel_with_transparent_border_webp);
+    }
+
+    public void testLossyRedPixelWithTransparentBorder() throws Exception {
+        assertEqualBitmaps(R.raw.test_red_pixel_with_transparent_border_lossy_png, R.raw.test_red_pixel_with_transparent_border_lossy_webp);
+    }
+
+    public void testComplexRoundImage() throws Exception {
+        assertEqualBitmaps(R.raw.test_round_png, R.raw.test_round_webp);
     }
 
     public void testGetSize() throws Exception {
@@ -77,20 +85,6 @@ public class WebPBackportTest extends AndroidTestCase {
         assertNull(rect);
     }
 
-    void decodeAndAssertNormalImage(int times) throws Exception {
-        byte[] encoded = loadFromResource(R.raw.test_lights_1280x853);
-        for (int i = 0; i < times; i++) {
-            Bitmap bitmap = WebPBackport.decodeViaLibrary(encoded);
-            assertImage(bitmap, 1280, 853);
-        }
-    }
-
-    void assertImage(Bitmap bitmap, int width, int height) {
-        assertNotNull(bitmap);
-        assertEquals(width, bitmap.getWidth());
-        assertEquals(height, bitmap.getHeight());
-    }
-
     public void testMaximumPossibleWebPFileThrowsOutOfMemoryError() throws Exception {
         byte[] encoded = loadFromResource(R.raw.test_maximum_16383px);
         try {
@@ -101,9 +95,52 @@ public class WebPBackportTest extends AndroidTestCase {
         }
     }
 
-    byte[] loadFromResource(@RawRes int resource) throws Exception {
+    private byte[] loadFromResource(@RawRes int resource) throws Exception {
         InputStream in = getContext().getResources().openRawResource(resource);
         return IOUtils.toByteArray(in);
+    }
+
+    private Bitmap webpBitmapFromResource(@RawRes int resource) throws Exception {
+        byte[] bytes = loadFromResource(resource);
+        return WebPBackport.decodeViaLibrary(bytes);
+    }
+
+    private Bitmap normalBitmapFromResource(@RawRes int resource) throws Exception {
+        byte[] bytes = loadFromResource(resource);
+        return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+    }
+
+    private void assertEqualBitmaps(@RawRes int expectedResource, @RawRes int webpResource) throws Exception {
+        Bitmap expected = normalBitmapFromResource(expectedResource);
+        Bitmap actual = webpBitmapFromResource(webpResource);
+        assertEqualBitmaps(expected, actual);
+    }
+
+    public void assertEqualBitmaps(Bitmap expected, Bitmap actual) {
+        assertEquals(expected.getHeight(), actual.getHeight());
+        assertEquals(expected.getWidth(), actual.getWidth());
+        for (int y = 0; y < expected.getHeight(); y++) {
+            for (int x = 0; x < expected.getWidth(); x++) {
+                int expectedPixel = expected.getPixel(x, y);
+                int actualPixel = actual.getPixel(x, y);
+                String message = String.format("Pixels at (%s, %s) have different colors.", x, y);
+                assertEquals(message, expectedPixel, actualPixel);
+            }
+        }
+    }
+
+    private void assertImage(Bitmap bitmap, int width, int height) {
+        assertNotNull(bitmap);
+        assertEquals(width, bitmap.getWidth());
+        assertEquals(height, bitmap.getHeight());
+    }
+
+    void decodeAndAssertNormalImage(int times) throws Exception {
+        byte[] encoded = loadFromResource(R.raw.test_lights_1280x853);
+        for (int i = 0; i < times; i++) {
+            Bitmap bitmap = WebPBackport.decodeViaLibrary(encoded);
+            assertImage(bitmap, 1280, 853);
+        }
     }
 
 }

@@ -77,12 +77,12 @@ public class FileSignatureCheckerTest extends AndroidTestCase {
 
     public void testWebPTransparentLosslessIsWebP() throws Exception {
         assertTrue(FileSignatureChecker.checkForWebP(
-                loadFromResource(R.raw.test_transparent_lossless)));
+                loadFromResource(R.raw.test_pixel_transparent_webp)));
     }
 
     public void testWebPTransparentLosslessIsRIFF() throws Exception {
         assertTrue(FileSignatureChecker.checkForRIFF(
-                loadFromResource(R.raw.test_transparent_lossless)));
+                loadFromResource(R.raw.test_pixel_transparent_webp)));
     }
 
 

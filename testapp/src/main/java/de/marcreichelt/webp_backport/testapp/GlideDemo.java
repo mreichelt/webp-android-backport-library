@@ -12,15 +12,19 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DecodeFormat;
-import com.bumptech.glide.load.resource.bitmap.ImageVideoBitmapDecoder;
-import com.bumptech.glide.load.resource.file.FileToStreamDecoder;
 
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
 
+import de.marcreichelt.webp_backport.WebPBackport;
+
 public class GlideDemo extends AppCompatActivity {
+
+    static {
+        WebPBackport.forceLoadLibrary();
+    }
 
     RecyclerView recyclerView;
 
@@ -43,7 +47,7 @@ public class GlideDemo extends AppCompatActivity {
 
         public GlideDemoAdapter(int n) {
             this.n = n;
-            InputStream in = getResources().openRawResource(R.raw.test_lights_150x100);
+            InputStream in = getResources().openRawResource(R.raw.round);
             try {
                 imageData = IOUtils.toByteArray(in);
             } catch (IOException e) {

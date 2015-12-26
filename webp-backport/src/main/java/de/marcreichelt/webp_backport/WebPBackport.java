@@ -24,6 +24,10 @@ public class WebPBackport {
         }
     }
 
+    public static void forceLoadLibrary() {
+        loadLibrary();
+    }
+
     private static native boolean getInfo(byte[] encoded, int[] width, int[] height);
 
     private static native boolean decodeRGBAInto(Bitmap bitmap, byte[] encoded);
@@ -41,27 +45,20 @@ public class WebPBackport {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2;
     }
 
+
     /**
-     * Decodes a WebP image. This is done either by using the Android internal functionality or by using the
-     * WebPBackport library. The WebPBackport library is used only when the current Android system does not support the
-     * decoding by itself.
-     * <p>
-     * If the given encoded image does not have the necessary WebP file signature in the beginning of its
-     * content, then the encoded image will not be decoded.
-     * </p>
+     * Decodes any image supported by the system or the WebP library.
+     * <p>Note that this method not only supports WebP, but supports PNG, JPG etc. as well. But if
+     * WebP data is detected this will do some more magic. :-)</p>
      *
-     * @param encoded The encoded WebP data (e.g. from a stream, resource, etc.).
-     * @return The decoded WebP image, or {@code null} if it could not be decoded successfully or if {@code encoded}
-     * did not have the necessary WebP signature
+     * @param encoded The encoded image data (e.g. from a stream, resource, etc.).
+     * @return The decoded image, or {@code null} if it could not be decoded successfully.
      */
     public static Bitmap decode(byte[] encoded) {
-        if (FileSignatureChecker.checkForWebP(encoded)) {
-            if (isLibraryUsed()) {
-                return decodeViaLibrary(encoded);
-            }
-            return decodeViaSystem(encoded);
+        if (isLibraryUsed() && FileSignatureChecker.checkForWebP(encoded)) {
+            return decodeViaLibrary(encoded);
         }
-        return null;
+        return decodeViaSystem(encoded);
     }
 
     /**
