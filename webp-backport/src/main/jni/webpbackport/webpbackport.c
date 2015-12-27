@@ -13,7 +13,6 @@
 #define  LOGI(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
 #define  LOGE(...)  __android_log_print(ANDROID_LOG_ERROR,LOG_TAG,__VA_ARGS__)
 
-
 JNIEXPORT jboolean JNICALL Java_de_marcreichelt_webp_1backport_WebPBackport_getInfo(
         JNIEnv * env,
         jobject obj,
@@ -70,7 +69,7 @@ jboolean decodeRGBAIntoInternal(JNIEnv * env, AndroidBitmapInfo info, jbyteArray
         return JNI_FALSE;
     }
 
-    result = WebPDecodeRGBAInto(encoded_array, encoded_length, (uint8_t*) pixels, output_buffer_size, info.stride);
+    result = WebPDecodergbAInto(encoded_array, encoded_length, (uint8_t*) pixels, output_buffer_size, info.stride);
 
     AndroidBitmap_unlockPixels(env, bitmap);
 
