@@ -43,7 +43,7 @@ public class WebPBackportTest extends AndroidTestCase {
     public void testNativeDecodeForComparisonIfPossible() throws Exception {
         // only run test case when the device supports it
         if (WebPBackport.isWebpSupportedNatively()) {
-            byte[] encoded = loadFromResource(R.raw.test_lights_1280x853);
+            byte[] encoded = loadFromResource(R.raw.test_lights_1280x853_webp);
             for (int i = 0; i < 77; i++) {
                 Bitmap bitmap = WebPBackport.decodeViaSystem(encoded);
                 assertImage(bitmap, 1280, 853);
@@ -75,8 +75,20 @@ public class WebPBackportTest extends AndroidTestCase {
         assertEqualBitmaps(R.raw.test_round_small_png, R.raw.test_round_small_webp);
     }
 
+    public void testLine() throws Exception {
+        assertEqualBitmaps(R.raw.test_line_png, R.raw.test_line_webp);
+    }
+
+    public void testSemiTransparentPixel() throws Exception {
+        assertEqualBitmaps(R.raw.test_pixel_semi_transparent_png, R.raw.test_pixel_semi_transparent_webp);
+    }
+
+    public void testBigImage() throws Exception {
+        assertEqualBitmaps(R.raw.test_lights_1280x853_png, R.raw.test_lights_1280x853_webp);
+    }
+
     public void testGetSize() throws Exception {
-        byte[] encoded = loadFromResource(R.raw.test_lights_1280x853);
+        byte[] encoded = loadFromResource(R.raw.test_lights_1280x853_webp);
         Rect rect = WebPBackport.getSize(encoded);
         assertNotNull(rect);
         assertEquals(1280, rect.width());
@@ -142,7 +154,7 @@ public class WebPBackportTest extends AndroidTestCase {
     }
 
     void decodeAndAssertNormalImage(int times) throws Exception {
-        byte[] encoded = loadFromResource(R.raw.test_lights_1280x853);
+        byte[] encoded = loadFromResource(R.raw.test_lights_1280x853_webp);
         for (int i = 0; i < times; i++) {
             Bitmap bitmap = WebPBackport.decodeViaLibrary(encoded);
             assertImage(bitmap, 1280, 853);
