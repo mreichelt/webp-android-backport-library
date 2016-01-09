@@ -209,7 +209,7 @@ void WebPMultRows(uint8_t* ptr, int stride,
 // (x * a * 32897) >> 23 is bit-wise equivalent to (int)(x * a / 255.)
 // for all 8bit x or a. For bit-wise equivalence to (int)(x * a / 255. + .5),
 // one can use instead: (x * a * 65793 + (1 << 23)) >> 24
-#if 1     // (int)(x * a / 255.)
+#if 0     // (int)(x * a / 255.)
 #define MULTIPLIER(a)   ((a) * 32897U)
 #define PREMULTIPLY(x, m) (((x) * (m)) >> 23)
 #else     // (int)(x * a / 255. + .5)
