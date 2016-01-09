@@ -163,14 +163,17 @@ public class WebPBackportTest {
     public void assertEqualBitmaps(Bitmap expected, Bitmap actual) {
         assertEquals(expected.getHeight(), actual.getHeight());
         assertEquals(expected.getWidth(), actual.getWidth());
-        for (int y = 0; y < expected.getHeight(); y++) {
-            for (int x = 0; x < expected.getWidth(); x++) {
-                int expectedColor = expected.getPixel(x, y);
-                int actualColor = actual.getPixel(x, y);
-                String expectedHex = "#" + Integer.toHexString(expectedColor);
-                String actualHex = "#" + Integer.toHexString(actualColor);
-                String message = String.format("Pixels at (%s, %s) have different colors.", x, y);
-                assertEquals(message, expectedHex, actualHex);
+        int expectedColor, actualColor, y, x;
+        for (y = 0; y < expected.getHeight(); y++) {
+            for (x = 0; x < expected.getWidth(); x++) {
+                expectedColor = expected.getPixel(x, y);
+                actualColor = actual.getPixel(x, y);
+                if (expectedColor != actualColor) {
+                    String expectedHex = "#" + Integer.toHexString(expectedColor);
+                    String actualHex = "#" + Integer.toHexString(actualColor);
+                    String message = String.format("Pixels at (%s, %s) have different colors.", x, y);
+                    assertEquals(message, expectedHex, actualHex);
+                }
             }
         }
     }
